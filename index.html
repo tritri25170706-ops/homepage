@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHIO - Stream Profile</title>
     <script src="categories-data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -3467,11 +3468,98 @@
         }
 
         function shellUpdateStats() {
-            document.getElementById('shellTotalGames').textContent = shellGameState.totalGames;
-            document.getElementById('shellWins').textContent = shellGameState.wins;
-            document.getElementById('shellLosses').textContent = shellGameState.losses;
-        }
-    </script>
-</body>
+             document.getElementById('shellTotalGames').textContent = shellGameState.totalGames;
+             document.getElementById('shellWins').textContent = shellGameState.wins;
+             document.getElementById('shellLosses').textContent = shellGameState.losses;
+         }
 
-</html>
+         const SUPABASE_URL = 'https://rgpovybsovsjnhkitkbp.supabase.co';
+         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJncG92eWJzb3Zzam5oa2l0a2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDU2NzIyMDgsImV4cCI6MTkyMTI0ODIwOH0.3rGXX5S7pQ8cK2mL9nR6vQ5wX3yZ1aB2cD4eF5gH6iJ';
+         
+         const { createClient } = window.supabase;
+         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+         async function loadProfile(userId) {
+             try {
+                 const { data: profile, error } = await supabase
+                     .from('users')
+                     .select('*')
+                     .eq('id', userId)
+                     .single();
+
+                 if (error) throw error;
+                 if (!profile) return;
+
+                 document.querySelector('.profile-name').textContent = profile.username;
+                 
+                 if (profile.profile_image) {
+                     const profileImg = document.querySelector('.profile-img');
+                     profileImg.innerHTML = `<img src="${profile.profile_image}" alt="Profile">`;
+                 }
+
+                 if (profile.tags && profile.tags.length > 0) {
+                     const tagsContainer = document.querySelector('.profile-tags');
+                     tagsContainer.innerHTML = profile.tags.map(tag => 
+                         `<span class="tag">${tag}</span>`
+                     ).join('');
+                 }
+
+                 if (profile.social_links) {
+                     const socialLinks = profile.social_links;
+                     const linksContainer = document.querySelector('.social-links');
+                     linksContainer.innerHTML = Object.entries(socialLinks).map(([platform, url]) => 
+                         `<a href="${url}" class="social-link" target="_blank">${platform}</a>`
+                     ).join('');
+                 }
+             } catch (error) {
+                 console.error('Error loading profile:', error.message);
+             }
+         }
+
+         async function updateProfile(userId, data) {
+             try {
+                 const { error } = await supabase
+                     .from('users')
+                     .update(data)
+                     .eq('id', userId);
+
+                 if (error) throw error;
+                 alert('Profile updated successfully!');
+                 loadProfile(userId);
+             } catch (error) {
+                 console.error('Error updating profile:', error.message);
+                 alert('Error: ' + error.message);
+             }
+         }
+
+         async function uploadProfileImage(userId, file) {
+             try {
+                 const fileName = `${userId}-${Date.now()}-${file.name}`;
+                 
+                 const { error: uploadError } = await supabase
+                     .storage
+                     .from('profiles')
+                     .upload(`images/${fileName}`, file);
+
+                 if (uploadError) throw uploadError;
+
+                 const { data: { publicUrl } } = supabase
+                     .storage
+                     .from('profiles')
+                     .getPublicUrl(`images/${fileName}`);
+
+                 await updateProfile(userId, { profile_image: publicUrl });
+             } catch (error) {
+                 console.error('Error uploading image:', error.message);
+                 alert('Error: ' + error.message);
+             }
+         }
+
+         const CURRENT_USER_ID = 1;
+         document.addEventListener('DOMContentLoaded', () => {
+             loadProfile(CURRENT_USER_ID);
+         });
+        </script>
+        </body>
+
+        </html>
