@@ -1,0 +1,3684 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIO - Stream Profile</title>
+    <script src="categories-data.js"></script>
+    <style>
+        /* รีเซ็ตค่าเริ่มต้น */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* พื้นหลัง - โทนสีแดงเลือดเข้มและสีดำ */
+        body {
+            background: url('รวมหมวด/829589.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            box-shadow: inset 0 0 20px rgba(200, 50, 100, 0.3);
+            animation: red-glow-border 2s infinite;
+        }
+
+        /* อนิเมชั่นไฟกระผิบสีแดงที่ขอบเว็บ */
+        @keyframes red-glow-border {
+
+            0%,
+            100% {
+                box-shadow: inset 0 0 20px rgba(200, 50, 100, 0.3), 0 0 30px rgba(200, 50, 100, 0.3);
+                border-color: rgba(200, 50, 100, 0.4);
+            }
+
+            50% {
+                box-shadow: inset 0 0 40px rgba(200, 50, 100, 0.6), 0 0 60px rgba(200, 50, 100, 0.6);
+                border-color: rgba(200, 50, 100, 0.8);
+            }
+        }
+
+        /* กริดพื้นหลัง - สร้างตาข่ายลึกลับ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(0deg, transparent 24%, rgba(200, 50, 100, 0.05) 25%, rgba(200, 50, 100, 0.05) 26%, transparent 27%, transparent 74%, rgba(200, 50, 100, 0.05) 75%, rgba(200, 50, 100, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(200, 50, 100, 0.05) 25%, rgba(200, 50, 100, 0.05) 26%, transparent 27%, transparent 74%, rgba(200, 50, 100, 0.05) 75%, rgba(200, 50, 100, 0.05) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse-grid 4s infinite;
+        }
+
+        /* อนิเมชั่นกริด - สัตหลิงจึงจริง */
+        @keyframes pulse-grid {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* เอฟเฟกต์เลือดไหล */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(200, 50, 100, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                gap: 15px;
+            }
+        }
+
+        /* แถบข้างซ้าย - โปรไฟล์ */
+         .sidebar {
+             position: relative;
+             width: 100%;
+             max-width: 430px;
+             background: rgba(20, 5, 15, 0.95);
+             border: 2px solid rgba(200, 50, 100, 0.8);
+             border-radius: 15px;
+             padding: 0;
+             backdrop-filter: blur(10px);
+             box-shadow: 0 0 30px rgba(200, 50, 100, 0.3), inset 0 0 20px rgba(200, 50, 100, 0.1);
+             animation: sidebar-glow 3s infinite;
+             text-align: center;
+             flex-shrink: 0;
+             overflow: hidden;
+             display: flex;
+             flex-direction: column;
+         }
+
+         @media (max-width: 768px) {
+             .sidebar {
+                 max-width: 100%;
+             }
+         }
+
+        /* แถบหมวดหมู่ */
+        .categories-sidebar {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            background: rgba(20, 15, 25, 0.95);
+            border: 2px solid rgba(200, 50, 100, 0.6);
+            border-radius: 15px;
+            padding: 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(200, 50, 100, 0.2), inset 0 0 20px rgba(200, 50, 100, 0.08);
+            text-align: center;
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* แถบความลับเพื่อน */
+        .secrets-sidebar {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            background: rgba(20, 30, 40, 0.95);
+            border: 2px solid rgba(100, 200, 200, 0.6);
+            border-radius: 15px;
+            padding: 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(100, 200, 200, 0.2), inset 0 0 20px rgba(100, 200, 200, 0.08);
+            text-align: center;
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+        }
+
+        /* แสดงเมื่อเปิดหมวดความลับ */
+        .secrets-sidebar.active {
+            display: flex;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: rgba(200, 50, 100, 0.2);
+            border-bottom: 1px solid rgba(200, 50, 100, 0.4);
+            padding: 12px;
+            font-size: 14px;
+            color: rgba(200, 50, 100, 0.8);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Categories Sidebar Header */
+        .categories-sidebar-header {
+            background: rgba(200, 50, 100, 0.15);
+            border-bottom: 1px solid rgba(200, 50, 100, 0.3);
+            padding: 12px;
+            font-size: 13px;
+            color: rgba(200, 50, 100, 0.8);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .categories-sidebar-close {
+            background: none;
+            border: none;
+            color: rgba(200, 50, 100, 0.8);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s;
+        }
+
+        .categories-sidebar-close:hover {
+            color: rgba(200, 50, 100, 1);
+        }
+
+        /* Secrets Header */
+        .secrets-header {
+            background: rgba(100, 200, 200, 0.15);
+            border-bottom: 1px solid rgba(100, 200, 200, 0.3);
+            padding: 12px;
+            font-size: 13px;
+            color: rgba(100, 200, 200, 0.8);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Categories Menu Container */
+        .categories-menu-container {
+            flex: 1;
+            padding: 15px 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        /* Individual Category Item */
+        .category-menu-item {
+            padding: 10px 12px;
+            background: rgba(200, 50, 100, 0.1);
+            border: 1px solid rgba(200, 50, 100, 0.3);
+            border-radius: 8px;
+            color: #ff6b9d;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-menu-item:hover {
+            background: rgba(200, 50, 100, 0.2);
+            border-color: rgba(200, 50, 100, 0.6);
+            transform: translateX(5px);
+        }
+
+        .category-menu-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .category-menu-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        /* Secrets Menu Container */
+        .secrets-menu-container {
+            flex: 1;
+            padding: 15px 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        /* Individual Secret Item */
+        .secret-menu-item {
+            padding: 10px 12px;
+            background: rgba(100, 200, 200, 0.1);
+            border: 1px solid rgba(100, 200, 200, 0.3);
+            border-radius: 8px;
+            color: #5fd9d9;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .secret-menu-item:hover {
+            background: rgba(100, 200, 200, 0.2);
+            border-color: rgba(100, 200, 200, 0.6);
+            transform: translateX(5px);
+        }
+
+        .secret-menu-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .secret-menu-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        /* อนิเมชั่นแสงเรืองรอง */
+        @keyframes sidebar-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(200, 50, 100, 0.3), inset 0 0 20px rgba(200, 50, 100, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 50px rgba(200, 50, 100, 0.5), inset 0 0 30px rgba(200, 50, 100, 0.2);
+            }
+        }
+
+        /* รูปโปรไฟล์ */
+        .profile-img {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #1a0a1a, #0a0a0a);
+            border: none;
+            border-radius: 0;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: rgba(200, 50, 100, 0.4);
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(200, 50, 100, 0.3);
+        }
+
+        /* ไอคอนมือลอยในพื้นหลัง */
+        .profile-img::before {
+            content: '😪';
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.1;
+            animation: float 6s infinite;
+            color: rgba(200, 50, 100, 0.5);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ชื่อโปรไฟล์ */
+        .profile-name {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 20px 20px 15px 20px;
+            color: #ff6b9d;
+            text-shadow: 0 0 10px rgba(200, 50, 100, 0.8);
+            letter-spacing: 1px;
+        }
+
+        /* แท็กโปรไฟล์ */
+        .profile-tags {
+            font-size: 13px;
+            color: #c05080;
+            margin: 0 20px 20px 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tag {
+            background: rgba(200, 50, 100, 0.25);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(200, 50, 100, 0.5);
+            text-shadow: 0 0 5px rgba(200, 50, 100, 0.5);
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .tag:hover {
+            background: rgba(200, 50, 100, 0.4);
+            border-color: rgba(200, 50, 100, 0.7);
+        }
+
+        /* ลิงค์โซเชียลมีเดีย */
+        .social-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 20px 25px 20px;
+        }
+
+        .social-link {
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 2px solid rgba(200, 50, 100, 0.6);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+            color: rgba(200, 50, 100, 0.8);
+        }
+
+        .social-link svg {
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 0 5px rgba(200, 50, 100, 0.5));
+        }
+
+        .social-link:hover {
+            background: rgba(200, 50, 100, 0.3);
+            border-color: rgba(200, 50, 100, 0.9);
+            box-shadow: 0 0 15px rgba(200, 50, 100, 0.6);
+            transform: scale(1.1);
+        }
+
+        /* ปุ่มปรับแต่ง */
+        .customize-btn {
+            width: auto;
+            margin: 0 20px 20px 20px;
+            padding: 12px 24px;
+            background: rgba(200, 50, 100, 0.3);
+            border: 1px solid rgba(200, 50, 100, 0.7);
+            color: #ff6b9d;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px rgba(200, 50, 100, 0.5);
+            position: relative;
+        }
+
+        .customize-btn:hover {
+            background: rgba(200, 50, 100, 0.5);
+            border-color: rgba(200, 50, 100, 0.9);
+            box-shadow: 0 0 15px rgba(200, 50, 100, 0.6);
+        }
+
+        /* Dropdown styles - Side by side categories and secrets */
+        .categories-dropdown {
+            position: fixed;
+            background: rgba(20, 5, 15, 0.98);
+            border: 2px solid rgba(200, 50, 100, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(200, 50, 100, 0.4);
+            z-index: 1000;
+            max-height: 65vh;
+            backdrop-filter: blur(10px);
+            width: 90vw;
+            max-width: 900px;
+            display: flex;
+            gap: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            flex-direction: row;
+            animation: dropdownSlideIn 0.3s ease-out;
+        }
+
+        @keyframes dropdownSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0), 0 0 0 rgba(200, 50, 100, 0);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(200, 50, 100, 0.4);
+            }
+        }
+
+        .dropdown-section {
+            flex: 1;
+            padding: 0;
+            overflow-y: auto;
+            max-height: 65vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-section:last-child {
+            border-left: 2px solid rgba(100, 100, 150, 0.4);
+        }
+
+        .dropdown-section-left {
+            background: linear-gradient(135deg, rgba(30, 20, 40, 0.95) 0%, rgba(20, 15, 30, 0.95) 100%);
+        }
+
+        .dropdown-section-right {
+            background: linear-gradient(135deg, rgba(25, 10, 20, 0.95) 0%, rgba(15, 5, 15, 0.95) 100%);
+        }
+
+        .dropdown-title {
+            padding: 18px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(200, 50, 100, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 5, 10, 0.95);
+            z-index: 10;
+            border-bottom: 2px solid rgba(200, 50, 100, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-section-left .dropdown-title {
+            color: rgba(100, 200, 200, 0.95);
+            border-bottom-color: rgba(100, 200, 200, 0.4);
+        }
+
+        .dropdown-section-right .dropdown-title {
+            color: rgba(200, 50, 100, 0.9);
+            border-bottom-color: rgba(200, 50, 100, 0.4);
+        }
+
+        .dropdown-title::before {
+            font-size: 16px;
+        }
+
+        .dropdown-section-left .dropdown-title::before {
+            content: '📂';
+        }
+
+        .dropdown-section-right .dropdown-title::before {
+            content: '🔐';
+        }
+
+        .dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 15px 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .dropdown-menu>div {
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+            color: #ff6b9d;
+            font-size: 14px;
+            font-weight: 500;
+            background: rgba(200, 50, 100, 0.08);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-menu>div:hover {
+            background: rgba(200, 50, 100, 0.25);
+            border-left-color: rgba(200, 50, 100, 0.9);
+            padding-left: 25px;
+            box-shadow: 0 4px 15px rgba(200, 50, 100, 0.2);
+            transform: translateX(3px);
+        }
+
+        .dropdown-section-left .dropdown-menu>div {
+            color: #5fd9d9;
+            background: rgba(100, 200, 200, 0.08);
+        }
+
+        .dropdown-section-left .dropdown-menu>div:hover {
+            background: rgba(100, 200, 200, 0.25);
+            border-left-color: rgba(100, 200, 200, 0.9);
+            box-shadow: 0 4px 15px rgba(100, 200, 200, 0.2);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(200, 50, 100, 0.2);
+            margin: 8px 0;
+        }
+
+        /* Responsive dropdown */
+        @media (max-width: 1000px) {
+            .categories-dropdown {
+                flex-direction: column;
+                max-height: 80vh;
+                max-width: 500px;
+            }
+
+            .dropdown-section:last-child {
+                border-left: none;
+                border-top: 2px solid rgba(100, 100, 150, 0.4);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .categories-dropdown {
+                width: 95vw;
+                max-width: 95vw;
+            }
+
+            .dropdown-menu>div {
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+        }
+
+        /* Profile Bottom Buttons */
+        .profile-bottom-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            margin-top: auto;
+            border-top: 1px solid rgba(200, 50, 100, 0.3);
+            background: rgba(20, 5, 15, 0.5);
+        }
+
+        .profile-action-btn {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(200, 50, 100, 0.2);
+            border: 1px solid rgba(200, 50, 100, 0.5);
+            color: #ff6b9d;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-shadow: 0 0 3px rgba(200, 50, 100, 0.4);
+        }
+
+        .profile-action-btn:hover {
+            background: rgba(200, 50, 100, 0.35);
+            border-color: rgba(200, 50, 100, 0.7);
+            box-shadow: 0 0 10px rgba(200, 50, 100, 0.4);
+        }
+
+        /* ส่วนหมวดหมู่ */
+        .category {
+            width: 100%;
+            max-width: 900px;
+            min-width: 0;
+        }
+
+        /* ส่วนเกม */
+        .game-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: 20px auto;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .game-container h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .game-instructions {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .image-item {
+            width: 80px;
+            height: 80px;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .image-item:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .image-item.selected {
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 30px auto;
+        }
+
+        .spinner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            border: 8px solid white;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid white;
+            z-index: 10;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn-spin {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-spin:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-spin:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .game-result {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            margin: 20px auto;
+        }
+
+        /* Shell Game Styles */
+        .shell-game-wrapper {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .shell-game-wrapper h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .game-instructions-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .phase-title {
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .shell-cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            perspective: 1000px;
+            min-height: 250px;
+        }
+
+        .shell-card {
+            width: 100px;
+            height: 150px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            user-select: none;
+        }
+
+        .shell-card:hover:not(.disabled):not(.locked) {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .shell-card.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .shell-card.locked {
+            cursor: not-allowed;
+        }
+
+        .shell-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .shell-card-label {
+            position: absolute;
+            bottom: 10px;
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .shell-status-display {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shell-status-text {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .shell-status-subtext {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .shell-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .shell-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .shell-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .shell-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .shell-btn.secondary {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .shell-stats {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .shell-stat-item {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        .shell-stat-number {
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .shell-result-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+            display: none;
+            color: white;
+        }
+
+        .shell-result-message.show {
+            display: block;
+        }
+
+        .shell-result-message.success {
+            background: rgba(40, 167, 69, 0.8);
+            border: 1px solid rgba(40, 167, 69, 1);
+        }
+
+        .shell-result-message.fail {
+            background: rgba(220, 53, 69, 0.8);
+            border: 1px solid rgba(220, 53, 69, 1);
+        }
+
+        .animation-swap-shell {
+            animation: swap-shell 0.6s ease-in-out;
+        }
+
+        @keyframes swap-shell {
+
+            0%,
+            100% {
+                transform: translateX(0) rotateY(0deg);
+            }
+
+            50% {
+                transform: translateX(50px) rotateY(90deg);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .shell-game-wrapper {
+                padding: 20px;
+            }
+
+            .shell-cards-container {
+                gap: 15px;
+                margin: 30px 0;
+            }
+
+            .shell-card {
+                width: 80px;
+                height: 120px;
+                font-size: 40px;
+            }
+
+            .shell-stat-item {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+
+        /* ส่วนหัว */
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            text-align: center;
+            padding: 30px;
+            background: rgba(20, 5, 15, 0.95);
+            border: 2px solid rgba(200, 50, 100, 0.8);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(200, 50, 100, 0.3), inset 0 0 20px rgba(200, 50, 100, 0.1);
+            max-width: 430px;
+            margin-left: auto;
+            margin-right: auto;
+            border-bottom: 2px solid rgba(200, 50, 100, 0.6);
+        }
+
+        /* เส้นแบ่งระหว่าง header และ sidebar */
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(200, 50, 100, 0.8), transparent);
+        }
+
+        /* มือลอยเลื่อนพื้นหลัง */
+        .header::before {
+            content: '😪 😪 😪';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            font-size: 80px;
+            opacity: 0.03;
+            letter-spacing: 50px;
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* ชื่อเสื่อ */
+        .header-title {
+            font-size: 32px;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(200, 50, 100, 0.6), 0 0 40px rgba(200, 50, 100, 0.3);
+            font-weight: 900;
+        }
+
+        /* คำบรรยายชื่อเสื่อ */
+        .header-subtitle {
+            font-size: 14px;
+            color: #c05080;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        /* ตัวอักษรตกแต่ง */
+        .decorative-text {
+            font-size: 11px;
+            color: rgba(200, 50, 100, 0.7);
+            margin: 15px 0;
+            letter-spacing: 3px;
+            text-shadow: 0 0 5px rgba(200, 50, 100, 0.5);
+        }
+
+        /* ระบบล็อกอิน */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .login-container {
+            background: linear-gradient(135deg, #1a0a1a, #0a0a0a);
+            border: 3px solid rgba(200, 50, 100, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(200, 50, 100, 0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .login-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(200, 50, 100, 0.5);
+            border: 1px solid rgba(200, 50, 100, 0.8);
+            color: #ff6b9d;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .login-close:hover {
+            background: rgba(200, 50, 100, 0.8);
+            box-shadow: 0 0 15px rgba(200, 50, 100, 0.5);
+        }
+
+        .login-title {
+            font-size: 24px;
+            color: #ff6b9d;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(200, 50, 100, 0.8);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-form input {
+            padding: 12px;
+            background: rgba(30, 10, 20, 0.7);
+            border: 2px solid rgba(200, 50, 100, 0.5);
+            border-radius: 8px;
+            color: #ff6b9d;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .login-form input::placeholder {
+            color: rgba(200, 50, 100, 0.5);
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: rgba(200, 50, 100, 0.9);
+            box-shadow: 0 0 20px rgba(200, 50, 100, 0.4);
+        }
+
+        .login-btn {
+            padding: 12px;
+            background: rgba(200, 50, 100, 0.6);
+            border: 2px solid rgba(200, 50, 100, 0.8);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background: rgba(200, 50, 100, 0.9);
+            box-shadow: 0 0 20px rgba(200, 50, 100, 0.6);
+        }
+
+        .login-error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        /* ระบบแอดมิน */
+        .admin-login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+
+        .admin-container {
+            background: linear-gradient(135deg, #0a0a2a, #1a0a2a);
+            border: 3px solid rgba(100, 100, 200, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 50px rgba(100, 100, 200, 0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .admin-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(100, 100, 200, 0.5);
+            border: 1px solid rgba(100, 100, 200, 0.8);
+            color: #64c8ff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .admin-close:hover {
+            background: rgba(100, 100, 200, 0.8);
+            box-shadow: 0 0 15px rgba(100, 100, 200, 0.5);
+        }
+
+        .admin-title {
+            font-size: 28px;
+            color: #64c8ff;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(100, 150, 200, 0.8);
+        }
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .admin-form input {
+            padding: 12px;
+            background: rgba(15, 20, 40, 0.7);
+            border: 2px solid rgba(100, 150, 200, 0.5);
+            border-radius: 8px;
+            color: #64c8ff;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .admin-form input::placeholder {
+            color: rgba(100, 150, 200, 0.5);
+        }
+
+        .admin-form input:focus {
+            outline: none;
+            border-color: rgba(100, 150, 200, 0.9);
+            box-shadow: 0 0 20px rgba(100, 150, 200, 0.4);
+        }
+
+        .admin-btn {
+            padding: 12px;
+            background: rgba(100, 150, 200, 0.6);
+            border: 2px solid rgba(100, 150, 200, 0.8);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .admin-btn:hover {
+            background: rgba(100, 150, 200, 0.9);
+            box-shadow: 0 0 20px rgba(100, 150, 200, 0.6);
+        }
+
+        .admin-error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .admin-error.show {
+            display: block;
+        }
+
+        /* ระบบรหัสผ่านความลับเพื่อน */
+        .secret-password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .secret-password-container {
+            background: linear-gradient(135deg, #0a1a1a, #0a0a2a);
+            border: 3px solid rgba(100, 200, 200, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(100, 200, 200, 0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .secret-password-title {
+            font-size: 22px;
+            color: #5fd9d9;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(100, 200, 200, 0.8);
+        }
+
+        .secret-password-subtitle {
+            font-size: 14px;
+            color: rgba(100, 200, 200, 0.7);
+            margin-bottom: 25px;
+        }
+
+        .secret-password-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .secret-password-form input {
+            padding: 12px;
+            background: rgba(15, 30, 30, 0.7);
+            border: 2px solid rgba(100, 200, 200, 0.5);
+            border-radius: 8px;
+            color: #5fd9d9;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .secret-password-form input::placeholder {
+            color: rgba(100, 200, 200, 0.5);
+        }
+
+        .secret-password-form input:focus {
+            outline: none;
+            border-color: rgba(100, 200, 200, 0.9);
+            box-shadow: 0 0 20px rgba(100, 200, 200, 0.4);
+        }
+
+        .secret-password-btn {
+            padding: 12px;
+            background: rgba(100, 200, 200, 0.6);
+            border: 2px solid rgba(100, 200, 200, 0.8);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .secret-password-btn:hover {
+            background: rgba(100, 200, 200, 0.9);
+            box-shadow: 0 0 20px rgba(100, 200, 200, 0.6);
+        }
+
+        .secret-password-error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .secret-password-error.show {
+            display: block;
+        }
+
+        .secret-password-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(100, 200, 200, 0.5);
+            border: 1px solid rgba(100, 200, 200, 0.8);
+            color: #5fd9d9;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .secret-password-close:hover {
+            background: rgba(100, 200, 200, 0.8);
+            box-shadow: 0 0 15px rgba(100, 200, 200, 0.5);
+        }
+
+        /* ซ่อน CSS สำหรับ sidebar เก่า - ไม่ใช้อีกต่อไป */
+        .sidebar-menu {
+            display: none;
+        }
+
+        .category-toggle-btn {
+            display: none;
+        }
+
+        .secrets-toggle-btn {
+            display: none;
+        }
+
+        .categories-container {
+            display: none;
+        }
+
+        .secrets-container {
+            display: none;
+        }
+
+        .categories-menu {
+            display: none;
+        }
+
+        .secrets-menu {
+            display: none;
+        }
+
+        .secret-item {
+            background: rgba(15, 30, 30, 0.85);
+            border: 2px solid rgba(100, 200, 200, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .secret-item:hover {
+            border-color: rgba(100, 200, 200, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(100, 200, 200, 0.4);
+        }
+
+        .secret-icon {
+            font-size: 28px;
+        }
+
+        .secret-name {
+            color: #5fd9d9;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(100, 200, 200, 0.6);
+            font-size: 11px;
+        }
+
+        /* หมวดหมู่ */
+        .category {
+            margin-bottom: 40px;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .category.active {
+            display: flex;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(200, 50, 100, 0.15);
+            border: 2px solid rgba(200, 50, 100, 0.4);
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: rgba(200, 50, 100, 0.3);
+            border: 1px solid rgba(200, 50, 100, 0.6);
+            color: #ff6b9d;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background: rgba(200, 50, 100, 0.6);
+            box-shadow: 0 0 15px rgba(200, 50, 100, 0.5);
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b9d;
+            text-shadow: 0 0 10px rgba(200, 50, 100, 0.8);
+            letter-spacing: 2px;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* เนื้อหาหลัก - ตารางแสดงจำนวนการ์ด (3 columns) */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .category-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .category-title {
+                width: 100%;
+                text-align: left;
+            }
+        }
+
+        /* ปุ่มการกระทำ */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        /* ปุ่มเดี่ยว */
+        .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+            background: rgba(200, 50, 100, 0.2);
+            border: 2px solid rgba(200, 50, 100, 0.6);
+            border-radius: 8px;
+            color: #ff6b9d;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 150px;
+            box-shadow: 0 0 10px rgba(200, 50, 100, 0.2);
+        }
+
+        .btn:hover {
+            background: rgba(200, 50, 100, 0.5);
+            border-color: rgba(200, 50, 100, 0.9);
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(200, 50, 100, 0.6);
+            text-shadow: 0 0 10px rgba(200, 50, 100, 0.8);
+        }
+
+        /* ไอคอนปุ่ม */
+        .btn-icon {
+            font-size: 32px;
+            animation: pulse-icon 2s infinite;
+        }
+
+        @keyframes pulse-icon {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* ข้อความปุ่ม */
+        .btn-text {
+            font-size: 13px;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(200, 50, 100, 0.5);
+        }
+
+        /* การ์ด - ภาพเพลง/สตรีม */
+        .card {
+            background: rgba(20, 5, 15, 0.85);
+            border: 2px solid rgba(200, 50, 100, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(200, 50, 100, 0.2);
+            position: relative;
+        }
+
+        /* เส้นสแกนบนการ์ด */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(200, 50, 100, 0.8), transparent);
+            opacity: 0;
+            animation: scan 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+
+            0%,
+            100% {
+                opacity: 0;
+                top: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .card:hover {
+            border-color: rgba(200, 50, 100, 0.9);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(200, 50, 100, 0.4);
+        }
+
+        /* ภาพในการ์ด */
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #0a0a0a, #1a0a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(200, 50, 100, 0.3);
+            font-size: 11px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ไอคอนมือหลังอิมเมจ */
+        .card-image::before {
+            content: '😪';
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.08;
+            animation: rotate-hand 6s infinite;
+        }
+
+        @keyframes rotate-hand {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(10deg);
+            }
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* เนื้อหาการ์ด */
+        .card-content {
+            padding: 15px;
+        }
+
+        /* ชื่อการ์ด */
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff6b9d;
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(200, 50, 100, 0.6);
+        }
+
+        /* ชื่อรองการ์ด */
+        .card-subtitle {
+            font-size: 12px;
+            color: #c05080;
+            margin-bottom: 10px;
+        }
+
+        /* แถบสถานะการ์ด */
+        .card-status-row {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-completed {
+            background: rgba(50, 200, 100, 0.6);
+            color: #fff;
+            border: 1px solid rgba(50, 200, 100, 0.8);
+        }
+
+        .status-in-progress {
+            background: rgba(255, 200, 50, 0.6);
+            color: #000;
+            border: 1px solid rgba(255, 200, 50, 0.8);
+        }
+
+        .status-not-started {
+            background: rgba(200, 50, 50, 0.6);
+            color: #fff;
+            border: 1px solid rgba(200, 50, 50, 0.8);
+        }
+
+        .status-abandoned {
+            background: rgba(80, 80, 80, 0.6);
+            color: #ccc;
+            border: 1px solid rgba(80, 80, 80, 0.8);
+        }
+
+        /* แสดงเนื้อหาบท */
+        .content-view {
+            margin-bottom: 40px;
+        }
+
+        .content-wrapper {
+            background: rgba(20, 5, 15, 0.85);
+            border: 2px solid rgba(200, 50, 100, 0.5);
+            border-radius: 8px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(200, 50, 100, 0.2);
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(200, 50, 100, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .content-subtitle {
+            font-size: 14px;
+            color: #c05080;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .content-body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #e0e0e0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ระยะเวลาการ์ด */
+        .card-duration {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #907080;
+        }
+
+        /* เวลาเพลง */
+        .duration-time {
+            font-weight: bold;
+            color: #ff6b9d;
+            text-shadow: 0 0 3px rgba(200, 50, 100, 0.5);
+        }
+
+        /* ดาวกระพริบ */
+        .star {
+            color: rgba(200, 50, 100, 0.8);
+            margin: 0 3px;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ข้อความเตือน */
+        .warning-text {
+            color: #ff6b9d;
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(200, 50, 100, 0.6);
+        }
+
+        /* มือลอยพื้นหลัง */
+        .floating-hand {
+            position: fixed;
+            font-size: 60px;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+            animation: float-around 15s infinite;
+        }
+
+        @keyframes float-around {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(100px, -100px) rotate(45deg);
+            }
+
+            50% {
+                transform: translate(0, -200px) rotate(90deg);
+            }
+
+            75% {
+                transform: translate(-100px, -100px) rotate(135deg);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(180deg);
+            }
+        }
+
+        /* หัวกระโหลกเอฟเฟกต์ */
+        .skull-effect {
+            position: fixed;
+            font-size: 80px;
+            pointer-events: none;
+            z-index: 10000;
+            animation: skull-pop 0.6s ease-out forwards;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
+        }
+
+        @keyframes skull-pop {
+            0% {
+                transform: scale(0) rotate(-45deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2) rotate(0deg);
+            }
+
+            100% {
+                transform: scale(0.8) translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                max-width: 100%;
+            }
+
+            .category {
+                width: 100%;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                max-width: 100%;
+            }
+
+            .profile-img {
+                height: 250px;
+            }
+
+            .header-title {
+                font-size: 24px;
+            }
+
+            .container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- มือลอยพื้นหลัง -->
+    <div class="floating-hand" style="top: 10%; left: 5%;">😪</div>
+    <div class="floating-hand" style="top: 30%; right: 10%; animation-delay: 2s;">😪</div>
+    <div class="floating-hand" style="top: 60%; left: 15%; animation-delay: 4s;">😪</div>
+    <div class="floating-hand" style="top: 80%; right: 8%; animation-delay: 6s;">😪</div>
+
+    <!-- Hidden containers for backward compatibility -->
+    <div id="categoriesSidebar" style="display: none;">
+        <div class="categories-menu" id="categoriesMenu"></div>
+    </div>
+    <div id="secretsSidebar" style="display: none;">
+        <div class="secrets-menu" id="secretsMenu"></div>
+    </div>
+
+    <!-- ระบบล็อกอิน -->
+    <div class="login-modal" id="loginModal" style="display: none;">
+        <div class="login-container">
+            <div class="login-close" onclick="closeLoginModal()">×</div>
+            <div class="login-title">LOGIN</div>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <input type="password" id="password" placeholder="password" required>
+                <button type="submit" class="login-btn">SIGN IN</button>
+                <div class="login-error" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ระบบแอดมิน -->
+    <div class="admin-login-modal" id="adminModal" style="display: none;">
+        <div class="admin-container">
+            <div class="admin-close" onclick="closeAdminModal()">×</div>
+            <div class="admin-title">ADMIN LOGIN</div>
+            <form class="admin-form" onsubmit="handleAdminLogin(event)">
+                <input type="password" id="adminPassword" placeholder="admin password" required>
+                <button type="submit" class="admin-btn">UNLOCK</button>
+                <div class="admin-error" id="adminError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ระบบรหัสผ่านความลับเพื่อน -->
+    <div class="secret-password-modal" id="secretPasswordModal" style="display: none;">
+        <div class="secret-password-container">
+            <div class="secret-password-close" onclick="closeSecretPasswordModal()">×</div>
+            <div class="secret-password-title" id="secretPasswordTitle">ความลับ</div>
+            <div class="secret-password-subtitle" id="secretPasswordSubtitle">กรุณาป้อนรหัสผ่าน</div>
+            <form class="secret-password-form" onsubmit="handleSecretPassword(event)">
+                <input type="password" id="secretPassword" placeholder="password" required>
+                <button type="submit" class="secret-password-btn">ยืนยัน</button>
+                <div class="secret-password-error" id="secretPasswordError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ส่วนหัว -->
+    <div class="header">
+        <div class="decorative-text">☆ ･ ･ •4+4• ･ ･ ☆</div>
+        <div class="header-title">TIKTOK SHIO</div>
+        <div class="header-subtitle">ชิเนโอ</div>
+    </div>
+
+    <!-- ตัวภาชนะหลัก -->
+    <div class="container" id="mainContent">
+        <!-- แถบข้างซ้าย - โปรไฟล์ -->
+        <div class="sidebar">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <span>🎭 Profile</span>
+            </div>
+
+            <!-- Profile Image -->
+            <div class="profile-img" id="profileImg">
+                <img src="https://media1.tenor.com/m/TqFCT8d4YLIAAAAC/obito-uchiha-naruto-shippuden.gif" alt="Profile"
+                    style="width: 100%; height: 100%; object-fit: cover;" onerror="showPlaceholder()" loading="lazy">
+            </div>
+
+            <!-- Profile Name -->
+            <div class="profile-name">SHIO</div>
+
+            <!-- Profile Tags (as pill buttons) -->
+            <div class="profile-tags">
+                <span class="tag gamer">🎮 Gamer</span>
+                <span class="tag artist">🎨 Artist</span>
+                <span class="tag owl">🌙 Night Owl</span>
+            </div>
+
+            <!-- Social Links (circular) -->
+            <div class="social-links">
+                <a href="https://www.tiktok.com/@mahi.push" target="_blank" class="social-link" title="TikTok">
+                    <svg viewBox="0 0 100 100" fill="none">
+                        <!-- Background circle -->
+                        <circle cx="50" cy="50" r="50" fill="#0f0815" />
+                        <!-- Cyan curved part -->
+                        <path d="M 35 25 Q 30 35 30 50 Q 30 65 40 72" stroke="#00d4ff" stroke-width="8"
+                            stroke-linecap="round" />
+                        <!-- Pink/Red curved part -->
+                        <path d="M 65 75 Q 70 65 70 50 Q 70 35 60 28" stroke="#ff2050" stroke-width="8"
+                            stroke-linecap="round" />
+                        <!-- Center white shape -->
+                        <path d="M 50 35 Q 45 40 45 50 Q 45 60 50 65 M 50 35 Q 55 40 55 50 Q 55 60 50 65" stroke="white"
+                            stroke-width="6" stroke-linecap="round" />
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/obitinaaaa/" target="_blank" class="social-link" title="Instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.266.069 1.646.069 4.85 0 3.204-.012 3.584-.07 4.85-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.322a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Customize Button (รวมหมวดหมู่) -->
+            <button class="customize-btn" id="toggleCategoryMenu" onclick="toggleCategoriesSidebar(event)">📂
+                รวมหมวดหมู่</button>
+
+            <!-- Bottom Buttons -->
+            <div class="profile-bottom-buttons">
+                <button class="profile-action-btn">🎭 โปรไฟล์</button>
+                <button class="profile-action-btn">🎂 เบิร์ธ</button>
+                <button class="profile-action-btn">⚙️ เครื่อง</button>
+            </div>
+        </div>
+
+        <!-- แถบหมวดหมู่ (ตรงกลาง-ซ้าย) - แสดง/ซ่อนได้ -->
+        <div class="categories-sidebar" id="categoriesSidebar" style="display: none;">
+            <!-- Categories Header -->
+            <div class="categories-sidebar-header">
+                <span>📂 หมวดหมู่</span>
+                <button class="categories-sidebar-close" onclick="toggleCategoriesSidebar()">×</button>
+            </div>
+
+            <!-- Categories Menu -->
+            <div class="categories-menu-container" id="categoriesMenuContainer">
+            </div>
+        </div>
+
+        <!-- แถบความลับเพื่อน (ตรงกลาง-ซ้าย) -->
+        <div class="secrets-sidebar">
+            <!-- Secrets Header -->
+            <div class="secrets-header">
+                <span>🤫 ความลับเพื่อน</span>
+            </div>
+
+            <!-- Secrets Menu -->
+            <div class="secrets-menu-container" id="secretsMenuContainer">
+            </div>
+        </div>
+
+        <!-- แสดงเนื้อหาหมวด (ด้านขวา) -->
+        <div class="category">
+            <div class="category-header">
+                <button class="back-btn" id="backBtn">← ย้อนกลับ</button>
+                <div class="category-title" id="categoryTitle">เลือกหมวด</div>
+            </div>
+            <!-- ตารางเนื้อหาหลัก -->
+            <div class="main-content" id="categoryContent">
+            </div>
+        </div>
+
+        <!-- แสดงเนื้อหาบท -->
+        <div class="content-view" id="contentView" style="display: none;">
+            <div class="content-header">
+                <button class="back-btn" id="backToListBtn">← กลับไปยังรายการ</button>
+            </div>
+            <div class="content-wrapper">
+                <div class="content-title" id="contentTitle"></div>
+                <div class="content-subtitle" id="contentSubtitle"></div>
+                <div class="content-body" id="contentBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dropdown Menu for Categories and Secrets -->
+    <div class="categories-dropdown" id="categoriesDropdown" style="display: none;">
+        <div class="dropdown-section dropdown-section-left">
+            <div class="dropdown-title">🤫 ความลับเพื่อน</div>
+            <div class="dropdown-menu" id="dropdownSecrets"></div>
+        </div>
+        <div class="dropdown-section dropdown-section-right">
+            <div class="dropdown-title">📂 หมวดปกติ</div>
+            <div class="dropdown-menu" id="dropdownCategories"></div>
+        </div>
+    </div>
+
+    <!-- Three.js Library สำหรับแสดง 3D Model -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GLTFLoader สำหรับโหลดไฟล์ GLTF/GLB -->
+    <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- ข้อมูลหมวด -->
+    <script src="categories-data.js"></script>
+
+
+
+    <script>
+        // ข้อมูลล็อกอิน - เก็บรหัสผ่านลับสุด
+        const credentials = {
+            beam: '123123zx@',
+            tong: '123123zx',
+            daeng: '123123za@',
+            hom: '1',
+            nene: '555'
+        };
+
+        let currentAdminPassword = '2000';
+        let adminAttempts = 0;
+        let secretPasswordAttempts = 0; // นับครั้งใส่รหัสผ่านความลับผิด
+        let secretsViewedCount = 0; // นับการดูความลับที่ผ่านแอดมิน
+
+        // ข้อมูลความลับของเพื่อน
+        const friendsSecrets = {
+            beam: {
+                name: 'บีม',
+                icon: '😎',
+                cards: [
+                    { title: 'ความลับ 1', subtitle: 'เรื่องส่วนตัว', uploadDate: '2024-01-15', warning: 'ลับมาก', content: 'นี่คือความลับส่วนตัวของบีม ที่ไม่อยากให้ใครรู้...' },
+                    { title: 'ความลับ 2', subtitle: 'เรื่องเรียน', uploadDate: '2024-01-14', warning: 'อย่ากล่าวต่อใคร', content: 'เรื่องราวเกี่ยวกับการเรียนที่เต็มไปด้วยมุขตลกและความหมายลึกซึ้ง' },
+                    { title: 'ความลับ 3', subtitle: 'เรื่องครอบครัว', uploadDate: '2024-01-13', warning: '🤐', content: 'เรื่องของครอบครัวที่เต็มไปด้วยความอบอุ่นและสิ่งที่น่าจดจำ' },
+                    { title: 'ความลับ 4', subtitle: 'เรื่องมิตรภาพ', uploadDate: '2024-01-12', warning: 'ลับแล้ว', content: 'มิตรภาพที่มีค่ามากและตัวอย่างของความเป็นเพื่อนที่แท้จริง' },
+                    { title: 'ความลับ 5', subtitle: 'เรื่องอื่นๆ', uploadDate: '2024-01-11', warning: '🔒', content: 'เรื่องอื่นๆ ที่ส่วนตัวและไม่อยากให้ใครทราบ' }
+                ]
+            }
+        };
+
+        let loginAttempts = 0;
+        let isLoggedIn = false;
+        let currentSecretFriend = null;
+
+        // ฟังก์ชั่นแสดงการ์ด secrets ของเพื่อน
+        function showSecretCards(friendId) {
+            const friend = friendsSecrets[friendId];
+            const categoryDiv = document.querySelector('.category');
+            const categoryTitle = document.getElementById('categoryTitle');
+            const categoryContent = document.getElementById('categoryContent');
+            const secretsSidebar = document.querySelector('.secrets-sidebar');
+
+            if (friend) {
+                categoryDiv.classList.add('active');
+                categoryTitle.textContent = `ความลับของ${friend.name}`;
+
+                // สร้างการ์ดสำหรับเพื่อนคนนี้
+                categoryContent.innerHTML = friend.cards.map(card => `
+                      <div class="card">
+                          <div class="card-image">
+                              <span>[ภาพสตรีม]</span>
+                          </div>
+                          <div class="card-content">
+                              <div class="card-title">${card.title}</div>
+                              <div class="card-subtitle">${card.subtitle}</div>
+                              <div class="card-duration">
+                                  <span class="duration-time">${card.uploadDate}</span>
+                                  ${card.warning ? `<span class="warning-text">${card.warning}</span>` : '<span>✓</span>'}
+                              </div>
+                          </div>
+                      </div>
+                  `).join('');
+
+                // แสดง secrets sidebar เมื่อเปิดหมวดความลับ
+                secretsSidebar.classList.add('active');
+                currentSecretFriend = friendId;
+
+                // เพิ่ม event listener สำหรับการ์ดความลับ
+                addSecretCardListeners(friendId);
+
+                // ถ้าเข้าผ่านแอดมิน ให้เพิ่ม ปุ่มเข้าแอดมินอีกครั้ง
+                if (secretsViewedCount === 0 && isLoggedIn) {
+                    const backBtn = categoryDiv.querySelector('.back-btn');
+                    if (backBtn && !backBtn.nextElementSibling?.classList?.contains('admin-access-btn')) {
+                        const adminBtn = document.createElement('button');
+                        adminBtn.className = 'back-btn admin-access-btn';
+                        adminBtn.textContent = '🔓 เข้าแอดมินอีกครั้ง';
+                        adminBtn.style.marginLeft = '10px';
+                        adminBtn.onclick = function () {
+                            document.getElementById('adminModal').style.display = 'flex';
+                        };
+                        backBtn.parentElement.appendChild(adminBtn);
+                    }
+                }
+            }
+        }
+
+        // ฟังก์ชั่นเพิ่ม event listener ให้กับการ์ดความลับ
+        function addSecretCardListeners(friendId) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.cursor = 'pointer';
+                card.onclick = function (e) {
+                    if (e.target.closest('.card')) {
+                        const titleEl = card.querySelector('.card-title');
+                        const subtitleEl = card.querySelector('.card-subtitle');
+                        const categoryContent = document.getElementById('categoryContent');
+                        const cardIndex = Array.from(categoryContent.children).indexOf(card);
+
+                        if (cardIndex >= 0) {
+                            const friend = friendsSecrets[friendId];
+                            const card_data = friend.cards[cardIndex];
+
+                            if (card_data.content) {
+                                showSecretContent(
+                                    titleEl.textContent,
+                                    subtitleEl.textContent,
+                                    card_data.content
+                                );
+                            }
+                        }
+                    }
+                };
+            });
+        }
+
+        // ฟังก์ชั่นแสดงเนื้อหาความลับ
+        function showSecretContent(title, subtitle, content) {
+            const categoryDiv = document.querySelector('.category');
+            const contentView = document.getElementById('contentView');
+
+            document.getElementById('contentTitle').textContent = title;
+            document.getElementById('contentSubtitle').textContent = subtitle;
+            document.getElementById('contentBody').textContent = content;
+
+            categoryDiv.style.display = 'none';
+            contentView.style.display = 'block';
+        }
+
+        // ฟังก์ชั่นปิด modal login
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            loginAttempts = 0;
+        }
+
+        // ฟังก์ชั่นปิด modal admin
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminError').classList.remove('show');
+            adminAttempts = 0;
+            loginAttempts = 0;
+            // แสดง login modal กลับมา
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        // ฟังก์ชั่นปิด modal รหัสผ่านความลับ
+        function closeSecretPasswordModal() {
+            document.getElementById('secretPasswordModal').style.display = 'none';
+            document.getElementById('secretPassword').value = '';
+            document.getElementById('secretPasswordError').classList.remove('show');
+        }
+
+        // ฟังก์ชั่นเปิด modal รหัสผ่านความลับ
+        function showSecretPasswordModal(friendId) {
+            // ตรวจสอบว่าล็อกอินแล้วหรือไม่
+            if (!isLoggedIn) {
+                document.getElementById('loginModal').style.display = 'flex';
+                return;
+            }
+
+            currentSecretFriend = friendId;
+            const friend = friendsSecrets[friendId];
+
+            // ตรวจสอบว่ามีสิทธิ์ดูผ่านแอดมิน (ยังไม่ได้ใช้ไป)
+            if (secretsViewedCount > 0) {
+                // ดูได้โดยไม่ต้องแสดง modal - แสดงการ์ดทันที
+                const secretsContainer = document.getElementById('secretsSidebar');
+
+                // ปิด secrets container
+                if (secretsContainer) {
+                    secretsContainer.classList.remove('active');
+                }
+
+                // แสดงการ์ด
+                showSecretCards(friendId);
+                secretsViewedCount = 0; // ใช้ไป 1 ครั้ง
+                return;
+            }
+
+            // ถ้ามี isLoggedIn แต่ secretsViewedCount = 0 แสดงหน้าให้ใส่รหัสผ่านปกติ
+            document.getElementById('secretPasswordTitle').textContent = `ความลับของ${friend.name}`;
+            document.getElementById('secretPasswordSubtitle').textContent = 'กรุณาป้อนรหัสผ่าน';
+            const secretInput = document.getElementById('secretPassword');
+            secretInput.style.display = 'block';
+            secretInput.value = '';
+            const secretBtn = document.querySelector('.secret-password-form button');
+            secretBtn.textContent = 'ยืนยัน';
+            secretBtn.dataset.mode = 'normal'; // ทำเครื่องหมายว่าเป็น mode ปกติ
+            document.getElementById('secretPasswordError').classList.remove('show');
+            document.getElementById('secretPasswordModal').style.display = 'flex';
+        }
+
+        // ฟังก์ชั่นจัดการการยืนยันรหัสผ่านความลับ
+        function handleSecretPassword(event) {
+            event.preventDefault();
+
+            const errorElement = document.getElementById('secretPasswordError');
+            const secretBtn = document.querySelector('.secret-password-form button');
+            const passwordInput = document.getElementById('secretPassword').value;
+
+            // ตรวจสอบว่าเข้ามาจากแอดมินหรือไม่
+            if (secretsViewedCount > 0) {
+                // เข้ามาจากแอดมิน - ดูได้แค่ครั้งเดียว (ไม่ต้องตรวจสอบรหัส)
+                const secretsContainer = document.getElementById('secretsSidebar');
+
+                // ปิด modal
+                document.getElementById('secretPasswordModal').style.display = 'none';
+
+                // ปิด secrets container
+                if (secretsContainer) {
+                    secretsContainer.classList.remove('active');
+                }
+
+                // แสดงการ์ด
+                showSecretCards(currentSecretFriend);
+                secretsViewedCount = 0; // ใช้ไป 1 ครั้ง
+                errorElement.classList.remove('show');
+            } else if (secretBtn.dataset.mode === 'normal') {
+                // เป็น mode ปกติ - ตรวจสอบรหัสผ่านปกติ
+                if (credentials[currentSecretFriend] === passwordInput) {
+                    // รหัสผ่านถูกต้อง - แสดงการ์ดความลับ
+                    secretPasswordAttempts = 0; // รีเซ็ตการนับ
+                    const secretsContainer = document.getElementById('secretsSidebar');
+                    document.getElementById('secretPasswordModal').style.display = 'none';
+
+                    if (secretsContainer) {
+                        secretsContainer.classList.remove('active');
+                    }
+
+                    showSecretCards(currentSecretFriend);
+                    errorElement.classList.remove('show');
+                } else {
+                    // รหัสผ่านไม่ถูกต้อง
+                    secretPasswordAttempts++;
+
+                    if (secretPasswordAttempts >= 3) {
+                        // ผิด 3 ครั้ง - ไปหน้า admin login
+                        secretPasswordAttempts = 0;
+                        document.getElementById('secretPasswordModal').style.display = 'none';
+                        document.getElementById('adminModal').style.display = 'flex';
+                    } else {
+                        // แสดง error และให้ลองใหม่
+                        errorElement.classList.add('show');
+                        errorElement.textContent = `รหัสผ่านไม่ถูกต้อง (พยายาม ${secretPasswordAttempts}/3)`;
+                    }
+                }
+            } else if (secretBtn.dataset.mode === 'admin') {
+                // ต้องเข้าแอดมินอีกครั้ง
+                document.getElementById('secretPasswordModal').style.display = 'none';
+                document.getElementById('adminModal').style.display = 'flex';
+            }
+        }
+
+        // ฟังก์ชั่นจัดการการล็อกอิน
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const passwordInput = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+
+            // ตรวจสอบรหัสผ่าน - ยอมรับรหัสผ่านใดๆ จากเพื่อนคนใดคนหนึ่ง
+            const validPasswords = Object.values(credentials);
+            if (validPasswords.includes(passwordInput)) {
+                // ล็อกอินสำเร็จ
+                isLoggedIn = true;
+                loginAttempts = 0;
+                document.getElementById('loginModal').style.display = 'none';
+                errorElement.classList.remove('show');
+            } else {
+                // ล็อกอินล้มเหลว
+                loginAttempts++;
+                errorElement.classList.add('show');
+
+                if (loginAttempts >= 3) {
+                    errorElement.textContent = 'ครบ 3 ครั้งแล้ว เข้าไปยังหน้าแอดมิน';
+                    document.getElementById('loginModal').style.display = 'none';
+                    document.getElementById('adminModal').style.display = 'flex';
+                } else {
+                    errorElement.textContent = `รหัสผ่านไม่ถูกต้อง (พยายาม ${loginAttempts}/3)`;
+                }
+            }
+        }
+
+        // ฟังก์ชั่นจัดการการล็อกอินแอดมิน
+        function handleAdminLogin(event) {
+            event.preventDefault();
+
+            const adminPasswordInput = document.getElementById('adminPassword').value;
+            const errorElement = document.getElementById('adminError');
+
+            if (adminPasswordInput === currentAdminPassword) {
+                // รหัสแอดมินถูกต้อง - อนุญาตให้ดูความลับ 1 ครั้ง
+                adminAttempts = 0;
+                isLoggedIn = true; // ตั้งค่า login status
+                secretsViewedCount = 1; // ให้ดูได้ 1 ครั้ง
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminModal').style.display = 'none';
+                errorElement.classList.remove('show');
+                // กลับไปหน้าหลัก
+                alert('ปลดล็อกสำเร็จ! สามารถดูความลับได้ 1 ครั้ง');
+            } else {
+                // รหัสผ่านแอดมินไม่ถูกต้อง
+                adminAttempts++;
+                errorElement.classList.add('show');
+
+                if (adminAttempts >= 2) {
+                    // เปลี่ยนรหัสเมื่อพยายามผิด 2 ครั้ง
+                    currentAdminPassword = '4000';
+                    errorElement.textContent = `รหัสผ่านไม่ถูกต้อง! ต้องใช้รหัส 4000 แล้ว`;
+                    document.getElementById('adminPassword').value = '';
+                    document.getElementById('adminPassword').placeholder = 'ใส่รหัส 4000';
+                } else {
+                    errorElement.textContent = `รหัสผ่านแอดมินไม่ถูกต้อง (พยายาม ${adminAttempts}/2)`;
+                }
+            }
+        }
+
+        let scenes = {}; // เก็บ Three.js scenes สำหรับแต่ละการ์ด
+
+        // ฟังก์ชั่นแสดงหมวด
+        function showCategory(categoryId) {
+            const sidebar = document.querySelector('.sidebar');
+            const categoryDiv = document.querySelector('.category');
+            const categoryTitle = document.getElementById('categoryTitle');
+            const categoryContent = document.getElementById('categoryContent');
+            const categoryData = window.categoriesData[categoryId];
+            const backBtn = document.getElementById('backBtn');
+
+            if (categoryData) {
+                // ปิด dropdown
+                closeDropdown();
+
+                // ซ่อนโปรไฟล์ แสดงหมวด
+                if (sidebar) sidebar.style.display = 'none';
+                categoryDiv.style.display = 'flex';
+                categoryDiv.classList.add('active');
+                categoryTitle.textContent = categoryData.title;
+
+                // ตั้งค่า back button
+                if (backBtn) {
+                    backBtn.onclick = function () {
+                        categoryDiv.style.display = 'none';
+                        categoryDiv.classList.remove('active');
+                        if (sidebar) sidebar.style.display = 'flex';
+                        categoryTitle.textContent = 'เลือกหมวด';
+                        categoryContent.innerHTML = '';
+                    };
+                }
+
+                // สร้างการ์ด
+                if (categoryId === 'game') {
+                    // สร้างหมวดเกมย่อย
+                    categoryContent.innerHTML = categoryData.cards.map((card, index) => `
+                       <div class="card" data-game-type="${card.gameType}" onclick="playGame(this, '${card.gameType}')">
+                           <div class="card-image">
+                               <span style="font-size: 60px;">${card.title.split(' ')[0]}</span>
+                           </div>
+                           <div class="card-content">
+                               <div class="card-title">${card.title}</div>
+                               <div class="card-subtitle">${card.subtitle}</div>
+                               <div class="card-status-row">
+                                   <span class="status-badge status-${card.status}">${getStatusLabel(card.status)}</span>
+                               </div>
+                               <div class="card-duration">
+                                   <span class="duration-time">${card.uploadDate}</span>
+                                   ${card.warning ? `<span class="warning-text">${card.warning}</span>` : '<span>✓</span>'}
+                               </div>
+                           </div>
+                       </div>
+                   `).join('');
+
+                    // เพิ่ม event listener
+                    document.querySelectorAll('[data-game-type="not-started"]').forEach(el => {
+                        el.style.cursor = 'not-allowed';
+                        el.style.opacity = '0.6';
+                        el.onclick = function (e) {
+                            e.preventDefault();
+                            alert('เกมนี้ยังไม่เปิดให้บริการ');
+                        };
+                    });
+                } else {
+                     categoryContent.innerHTML = categoryData.cards.map(card => `
+                          <div class="card" ${card.model ? `data-model="${card.model}"` : ''}>
+                              <div class="card-image">
+                                  <span style="font-size: 60px;">${card.thumbnail || '[ภาพสตรีม]'}</span>
+                              </div>
+                             <div class="card-content">
+                                 <div class="card-title">${card.title}</div>
+                                 <div class="card-subtitle">${card.subtitle}</div>
+                                 ${categoryId !== 'music' ? `
+                                 <div class="card-status-row">
+                                     <span class="status-badge status-${card.status}">${getStatusLabel(card.status)}</span>
+                                 </div>
+                                 ` : ''}
+                                 <div class="card-duration">
+                                     <span class="duration-time">${card.uploadDate}</span>
+                                     ${card.warning ? `<span class="warning-text">${card.warning}</span>` : '<span>✓</span>'}
+                                 </div>
+                             </div>
+                         </div>
+                     `).join('');
+                }
+
+                // เริ่มต้นการ์ดใหม่
+                initializeCards();
+
+                // เพิ่ม event listener สำหรับการ์ดเรื่องราว
+                if (categoryId === 'stories') {
+                    addStoryCardListeners();
+                }
+            }
+        }
+
+        // ฟังก์ชั่นแสดงเมนูหมวด
+        function toggleCategories() {
+            const categoriesContainer = document.getElementById('categoriesSidebar');
+            const categoryDiv = document.querySelector('.category');
+
+            categoriesContainer.classList.toggle('active');
+            categoryDiv.classList.remove('active');
+        }
+
+        // ฟังก์ชั่นแสดงข้อความสถานะ
+        function getStatusLabel(status) {
+            const labels = {
+                'completed': 'เสร็จ',
+                'in-progress': 'กำลังทำ',
+                'not-started': 'ยังไม่ทำ',
+                'abandoned': 'ไม่ทำ'
+            };
+            return labels[status] || status;
+        }
+
+        // ฟังก์ชั่นแสดงเนื้อหาบท
+        function showStoryContent(title, subtitle, content) {
+            const categoryDiv = document.querySelector('.category');
+            const contentView = document.getElementById('contentView');
+
+            document.getElementById('contentTitle').textContent = title;
+            document.getElementById('contentSubtitle').textContent = subtitle;
+            document.getElementById('contentBody').textContent = content;
+
+            categoryDiv.style.display = 'none';
+            contentView.style.display = 'block';
+        }
+
+        // ฟังก์ชั่นเพิ่ม event listener ให้กับการ์ดเรื่องราว
+        function addStoryCardListeners() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                // ลบ event listener เก่า
+                card.style.cursor = 'pointer';
+                card.onclick = function (e) {
+                    if (e.target.closest('.card')) {
+                        const titleEl = card.querySelector('.card-title');
+                        const subtitleEl = card.querySelector('.card-subtitle');
+                        const categoryContent = document.getElementById('categoryContent');
+                        const cardIndex = Array.from(categoryContent.children).indexOf(card);
+
+                        if (cardIndex >= 0) {
+                            const categoryId = 'stories';
+                            const card_data = categoriesData[categoryId].cards[cardIndex];
+
+                            if (card_data.content) {
+                                showStoryContent(
+                                    titleEl.textContent,
+                                    subtitleEl.textContent,
+                                    card_data.content
+                                );
+                            }
+                        }
+                    }
+                };
+            });
+        }
+
+        // ฟังก์ชั่นแสดง/ซ่อนเมนูความลับ
+        function toggleSecrets() {
+            const secretsContainer = document.getElementById('secretsSidebar');
+            secretsContainer.classList.toggle('active');
+        }
+
+        // ฟังก์ชั่นแสดง/ซ่อน categories sidebar
+        function toggleCategoriesSidebar(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            // ตรวจสอบว่า dropdown อยู่แล้วหรือไม่
+            let dropdown = document.querySelector('.categories-dropdown');
+            
+            if (dropdown) {
+                // ถ้ามีอยู่แล้ว ให้ปิด
+                closeDropdown();
+                return;
+            }
+
+            // สร้าง dropdown ใหม่
+            const categoryData = window.categoriesData || {};
+            const secretsData = window.friendsSecrets || {};
+            
+            // แยก regular categories
+            const regularCategories = [];
+
+            for (const [id, cat] of Object.entries(categoryData)) {
+                if (!cat.isSecret) {
+                    regularCategories.push({
+                        id: id,
+                        icon: cat.icon,
+                        name: cat.title
+                    });
+                }
+            }
+
+            // เตรียมข้อมูลเพื่อนความลับ
+            const secretFriends = [];
+            for (const [id, friend] of Object.entries(secretsData)) {
+                secretFriends.push({
+                    id: id,
+                    icon: friend.icon,
+                    name: friend.name
+                });
+            }
+
+            const dropdownHTML = `
+                <div class="dropdown-section dropdown-section-left">
+                    <div class="dropdown-title">📂 หมวดหมู่ปกติ</div>
+                    <div class="dropdown-menu">
+                        ${regularCategories.length > 0 ? regularCategories.map(cat => `
+                            <div onclick="showCategory('${cat.id}'); closeDropdown();">
+                                ${cat.icon} ${cat.name}
+                            </div>
+                        `).join('') : '<div style="padding: 15px; color: #999;">ไม่มีหมวดหมู่</div>'}
+                    </div>
+                </div>
+                <div class="dropdown-section dropdown-section-right">
+                    <div class="dropdown-title">🔐 ความลับเพื่อน</div>
+                    <div class="dropdown-menu">
+                        ${secretFriends.length > 0 ? secretFriends.map(friend => `
+                            <div onclick="showSecretPasswordModal('${friend.id}'); closeDropdown();">
+                                ${friend.icon} ${friend.name}
+                            </div>
+                        `).join('') : '<div style="padding: 15px; color: #999;">ไม่มีเพื่อน</div>'}
+                    </div>
+                </div>
+            `;
+
+            const dropdownEl = document.createElement('div');
+            dropdownEl.className = 'categories-dropdown';
+            dropdownEl.innerHTML = dropdownHTML;
+            document.body.appendChild(dropdownEl);
+
+            // ป้องกัน propagation
+            dropdownEl.addEventListener('click', e => e.stopPropagation());
+        }
+
+        // ฟังก์ชั่นแสดง/ซ่อน dropdown menu (เก่า)
+        function toggleCategoryMenu(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            const dropdown = document.getElementById('categoriesDropdown');
+            const btn = document.getElementById('toggleCategoryMenu');
+
+            if (!dropdown || !btn) {
+                console.error('Dropdown or button not found');
+                return;
+            }
+
+            const isHidden = dropdown.style.display === 'none' || !dropdown.style.display;
+
+            if (isHidden) {
+                dropdown.style.display = 'block';
+                // ปรับตำแหน่ง dropdown ให้ติดกับปุ่ม
+                setTimeout(() => {
+                    const btnRect = btn.getBoundingClientRect();
+                    dropdown.style.top = (btnRect.bottom + 10) + 'px';
+                    dropdown.style.right = Math.max(10, window.innerWidth - btnRect.right) + 'px';
+                }, 0);
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        // ปิด dropdown เมื่อคลิกที่ไหนสักแห่ง
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('categoriesDropdown');
+            const toggleBtn = document.getElementById('toggleCategoryMenu');
+            if (dropdown && toggleBtn) {
+                if (!dropdown.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+
+        // ปิด dropdown เมื่อกด Escape
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('categoriesDropdown');
+                if (dropdown) {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+
+        // Event listeners
+        const categoryToggleEl = document.getElementById('categoryToggle');
+        const secretsToggleEl = document.getElementById('secretsToggle');
+        if (categoryToggleEl) {
+            categoryToggleEl.addEventListener('click', toggleCategories);
+        }
+        if (secretsToggleEl) {
+            secretsToggleEl.addEventListener('click', toggleSecrets);
+        }
+
+        document.getElementById('backBtn').addEventListener('click', function () {
+            const secretsModal = document.getElementById('secretPasswordModal');
+            const secretsSidebar = document.querySelector('.secrets-sidebar');
+            if (secretsModal.style.display === 'flex') {
+                secretsModal.style.display = 'none';
+            } else {
+                // ซ่อน secrets sidebar เมื่อย้อนกลับ
+                secretsSidebar.classList.remove('active');
+                currentSecretFriend = null;
+                if (categoryToggleEl) {
+                    toggleCategories();
+                }
+            }
+        });
+        document.getElementById('backToListBtn').addEventListener('click', function () {
+            document.querySelector('.category').style.display = 'block';
+            document.getElementById('contentView').style.display = 'none';
+        });
+
+        // ฟังก์ชั่นแสดง Placeholder เมื่อไฟล์ไม่พบ
+        function showPlaceholder() {
+            const profileImg = document.getElementById('profileImg');
+            profileImg.innerHTML = `
+                <div style="
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(135deg, #1a0a1a, #2a1a3a);
+                    color: #ff6b9d;
+                    font-size: 40px;
+                    text-align: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                ">
+                    <div style="font-size: 60px; margin-bottom: 10px;">❌</div>
+                    <div style="font-size: 12px; color: #c05080;">ไม่พบ madara.gif</div>
+                    <div style="font-size: 10px; color: #808090; margin-top: 10px;">ดาวน์โหลด GIF ก่อน</div>
+                </div>
+            `;
+        }
+
+        // โหลดเสียงหัวเราะเมื่อหน้าเว็บโหลดเสร็จ
+        window.addEventListener('DOMContentLoaded', function () {
+            // สร้างเมนูหมวดจากข้อมูล
+            loadCategoriesMenu();
+            // สร้างเมนูความลับ
+            loadSecretsMenu();
+            // เพิ่มอิเวนต์ให้กับการ์ดทั้งหมด
+            initializeCards();
+        });
+
+        // ฟังก์ชั่นสร้างเมนูหมวด
+        function loadCategoriesMenu() {
+            const categoriesMenu = document.getElementById('categoriesMenu');
+            const dropdownCategories = document.getElementById('dropdownCategories');
+            const categoriesMenuContainer = document.getElementById('categoriesMenuContainer');
+
+            if (!categoriesMenu || !dropdownCategories) {
+                console.error('Elements not found');
+                return;
+            }
+
+            const html = Object.keys(categoriesData).map(categoryId => {
+                const category = categoriesData[categoryId];
+                return `
+                     <div class="category-item" onclick="showCategory('${categoryId}')">
+                          <span class="category-icon">${category.icon}</span>
+                          <span class="category-name">${category.title}</span>
+                      </div>
+                  `;
+            }).join('');
+
+            categoriesMenu.innerHTML = html;
+
+            // สร้าง dropdown items สำหรับหมวดปกติ (ขวา)
+            const normalCategories = Object.keys(categoriesData).filter(categoryId => !categoriesData[categoryId].isSecret);
+            dropdownCategories.innerHTML = normalCategories.map(categoryId => {
+                const category = categoriesData[categoryId];
+                return `<div onclick="showCategory('${categoryId}'); document.getElementById('categoriesDropdown').style.display = 'none';">${category.icon} ${category.title}</div>`;
+            }).join('');
+
+            // สร้าง categories sidebar menu - แสดงเฉพาะหมวดปกติ
+            if (categoriesMenuContainer) {
+                categoriesMenuContainer.innerHTML = normalCategories.map(categoryId => {
+                    const category = categoriesData[categoryId];
+                    return `<div class="category-menu-item" onclick="showCategory('${categoryId}'); toggleCategoriesSidebar();">
+                        <span class="category-menu-icon">${category.icon}</span>
+                        <span class="category-menu-name">${category.title}</span>
+                    </div>`;
+                }).join('');
+            }
+        }
+
+        // ฟังก์ชั่นสร้างเมนูความลับ
+        function loadSecretsMenu() {
+            const secretsMenu = document.getElementById('secretsMenu');
+            const dropdownSecrets = document.getElementById('dropdownSecrets');
+            const secretsMenuContainer = document.getElementById('secretsMenuContainer');
+
+            const html = Object.keys(friendsSecrets).map(friendId => {
+                const friend = friendsSecrets[friendId];
+                return `
+                     <div class="secret-item" onclick="showSecretPasswordModal('${friendId}')">
+                          <span class="secret-icon">${friend.icon}</span>
+                          <span class="secret-name">${friend.name}</span>
+                      </div>
+                  `;
+            }).join('');
+
+            if (secretsMenu) {
+                secretsMenu.innerHTML = html;
+            }
+
+            // สร้าง dropdown items
+            if (dropdownSecrets) {
+                dropdownSecrets.innerHTML = Object.keys(friendsSecrets).map(friendId => {
+                    const friend = friendsSecrets[friendId];
+                    return `<div onclick="showSecretPasswordModal('${friendId}'); document.getElementById('categoriesDropdown').style.display = 'none';">${friend.icon} ${friend.name}</div>`;
+                }).join('');
+            }
+
+            // สร้าง secrets sidebar menu
+            if (secretsMenuContainer) {
+                secretsMenuContainer.innerHTML = Object.keys(friendsSecrets).map(friendId => {
+                    const friend = friendsSecrets[friendId];
+                    return `<div class="secret-menu-item" onclick="showSecretPasswordModal('${friendId}')">
+                        <span class="secret-menu-icon">${friend.icon}</span>
+                        <span class="secret-menu-name">${friend.name}</span>
+                    </div>`;
+                }).join('');
+            }
+        }
+
+        // ฟังก์ชั่นเริ่มต้นการ์ด
+        function initializeCards() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                // ตั้งค่า data attribute สำหรับแต่ละการ์ด
+                card.dataset.cardId = `card-${index}`;
+
+                // เพิ่ม event listener
+                card.addEventListener('mouseenter', function (e) {
+                    playLaugh();
+
+                    // โหลด 3D model ถ้ามี
+                    const modelPath = card.dataset.model;
+                    if (modelPath) {
+                        loadModel(card);
+                    }
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    const cardId = card.dataset.cardId;
+                    if (scenes[cardId]) {
+                        // หยุด animation frame ก่อน
+                        if (scenes[cardId].animationId) {
+                            cancelAnimationFrame(scenes[cardId].animationId);
+                        }
+
+                        // dispose renderer resources
+                        if (scenes[cardId].renderer) {
+                            scenes[cardId].renderer.dispose();
+                        }
+
+                        // หยุดแสดง scene
+                        const canvas = card.querySelector('canvas');
+                        if (canvas) {
+                            canvas.remove();
+                        }
+                        delete scenes[cardId];
+                    }
+                });
+            });
+        }
+
+        // ฟังก์ชั่นเล่นเสียงหัวเราะจากไฟล์
+        function playLaugh() {
+            const audio = document.getElementById('laughSound');
+
+            if (audio) {
+                // หยุดเสียงเก่า และเล่นจากตัวชี้เวลา 0
+                audio.currentTime = 0;
+
+                // เล่นเสียง
+                const playPromise = audio.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('ไม่สามารถเล่นเสียง:', error);
+                        // ใช้ Web Audio API fallback (ถ้าไฟล์ไม่พบ)
+                        createFallbackLaugh();
+                    });
+                }
+            } else {
+                console.error('ไม่พบธาตุเสียง');
+                createFallbackLaugh();
+            }
+        }
+
+        // Fallback: สร้างเสียงหัวเราะด้วย Web Audio API (ถ้าไฟล์ไม่มี)
+        function createFallbackLaugh() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                const filter = audioContext.createBiquadFilter();
+
+                oscillator.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.type = 'sine';
+                filter.type = 'highpass';
+                filter.frequency.value = 1000;
+
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+
+                oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                oscillator.frequency.linearRampToValueAtTime(600, audioContext.currentTime + 0.1);
+                oscillator.frequency.linearRampToValueAtTime(400, audioContext.currentTime + 0.2);
+                oscillator.frequency.linearRampToValueAtTime(500, audioContext.currentTime + 0.3);
+                oscillator.frequency.linearRampToValueAtTime(300, audioContext.currentTime + 0.4);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+            } catch (e) {
+                console.log('Web Audio API ไม่พร้อมใช้งาน');
+            }
+        }
+
+        // ฟังก์ชั่นสร้างหัวกระโหลก
+        function createSkullEffect(x, y) {
+            const skull = document.createElement('div');
+            skull.className = 'skull-effect';
+            skull.textContent = '💀';
+            skull.style.left = x + 'px';
+            skull.style.top = y + 'px';
+
+            document.body.appendChild(skull);
+
+            // ลบหัวกระโหลกหลังจากเสร็จสิ้นอนิเมชั่น
+            setTimeout(() => {
+                skull.remove();
+            }, 600);
+        }
+
+        // ฟังก์ชั่นโหลด GLTF/GLB Model
+        function loadModel(card) {
+            const cardId = card.dataset.cardId;
+            const modelPath = card.dataset.model;
+            const cardImage = card.querySelector('.card-image');
+
+            // ลบ canvas เก่า (ถ้ามี)
+            const oldCanvas = cardImage.querySelector('canvas');
+            if (oldCanvas) {
+                oldCanvas.remove();
+            }
+
+            // สร้าง Three.js Scene
+            const canvas = document.createElement('canvas');
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.display = 'block';
+            cardImage.innerHTML = '';
+            cardImage.appendChild(canvas);
+
+            const width = cardImage.offsetWidth;
+            const height = cardImage.offsetHeight;
+
+            // สร้าง Scene, Camera, Renderer
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a0a1a);
+
+            const camera = new THREE.PerspectiveCamera(
+                75,
+                width / height,
+                0.1,
+                1000
+            );
+            camera.position.z = 2;
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                antialias: true,
+                alpha: true
+            });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // เพิ่มไฟ
+            const light1 = new THREE.DirectionalLight(0xff6b9d, 0.8);
+            light1.position.set(5, 5, 5);
+            scene.add(light1);
+
+            const light2 = new THREE.PointLight(0xc05080, 0.5);
+            light2.position.set(-5, -5, 5);
+            scene.add(light2);
+
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+
+            // โหลด GLTF/GLB Model
+            const loader = new THREE.GLTFLoader();
+
+            loader.load(
+                modelPath,
+                (gltf) => {
+                    const model = gltf.scene;
+
+                    // ปรับขนาด model
+                    const box = new THREE.Box3().setFromObject(model);
+                    const center = box.getCenter(new THREE.Vector3());
+                    model.position.sub(center);
+
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 1.5 / maxDim;
+                    model.scale.multiplyScalar(scale);
+
+                    scene.add(model);
+
+                    // เก็บ scene และ model สำหรับ animation
+                    scenes[cardId] = {
+                        scene: scene,
+                        renderer: renderer,
+                        model: model,
+                        camera: camera,
+                        animationId: null
+                    };
+
+                    // เริ่ม animation loop
+                    animateModel(cardId);
+                },
+                (progress) => {
+                    console.log('Model loading: ' + (progress.loaded / progress.total * 100).toFixed(2) + '%');
+                },
+                (error) => {
+                    console.error('Error loading model:', error);
+                    cardImage.innerHTML = '<span style="color: #ff6b9d;">❌ ไม่สามารถโหลด Model</span>';
+                }
+            );
+        }
+
+        // ฟังก์ชั่น animation loop สำหรับ Model
+        function animateModel(cardId) {
+            const sceneData = scenes[cardId];
+            if (!sceneData) return;
+
+            const animate = () => {
+                sceneData.animationId = requestAnimationFrame(animate);
+
+                // หมุน model
+                sceneData.model.rotation.x += 0.005;
+                sceneData.model.rotation.y += 0.008;
+                sceneData.model.rotation.z += 0.003;
+
+                // Render scene
+                sceneData.renderer.render(sceneData.scene, sceneData.camera);
+            };
+
+            animate();
+        }
+
+        // ปรับขนาด renderer เมื่อ window resize
+        window.addEventListener('resize', () => {
+            Object.values(scenes).forEach(sceneData => {
+                const renderer = sceneData.renderer;
+                const camera = sceneData.camera;
+
+                const width = renderer.domElement.parentElement.offsetWidth;
+                const height = renderer.domElement.parentElement.offsetHeight;
+
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            });
+        });
+
+        // ====================== Close Dropdown Function ======================
+        function closeDropdown() {
+            const dropdown = document.querySelector('.categories-dropdown');
+            if (dropdown) {
+                dropdown.style.animation = 'dropdownSlideOut 0.3s ease-out forwards';
+                setTimeout(() => dropdown.remove(), 300);
+            }
+        }
+
+        // Add slide out animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes dropdownSlideOut {
+                from {
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
+                }
+                to {
+                    opacity: 0;
+                    transform: translate(-50%, -60%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const dropdown = document.querySelector('.categories-dropdown');
+            if (dropdown && !dropdown.contains(event.target) && !event.target.classList.contains('category-menu-item')) {
+                closeDropdown();
+            }
+        });
+
+        // Prevent closing when clicking inside dropdown
+        document.addEventListener('click', function (event) {
+            if (event.target.closest('.categories-dropdown')) {
+                event.stopPropagation();
+            }
+        });
+
+        // ====================== Game Selection System ======================
+        function playGame(cardEl, gameType) {
+            if (gameType === 'not-started') {
+                alert('เกมนี้ยังไม่เปิดให้บริการ');
+                return;
+            }
+
+            if (gameType === 'shell') {
+                startShellGame(cardEl);
+            } else if (gameType === 'spinner') {
+                startSpinnerGame(cardEl);
+            }
+        }
+
+        function startShellGame(cardEl) {
+            const categoryDiv = document.querySelector('.category');
+            const categoryContent = document.getElementById('categoryContent');
+
+            categoryContent.innerHTML = `<div class="shell-game-wrapper">
+                 <h2>🎴 Shell Game</h2>
+                 <p class="game-instructions-text">
+                     เลือกการ์ดหนึ่งใบแล้วจดจำตำแหน่ง<br>
+                     การ์ดจะสลับที่กัน คุณต้องจดจำว่าใบที่เลือกไปอยู่ไหน
+                 </p>
+
+                 <div class="phase-title" id="phaseTitle">📌 ขั้นตอนที่ 1: เลือกการ์ด</div>
+
+                 <div class="shell-cards-container" id="shellCardsContainer">
+                     <div class="shell-card" data-id="1">
+                         <span>🎴</span>
+                         <div class="shell-card-label">ที่ 1</div>
+                     </div>
+                     <div class="shell-card" data-id="2">
+                         <span>🎴</span>
+                         <div class="shell-card-label">ที่ 2</div>
+                     </div>
+                     <div class="shell-card" data-id="3">
+                         <span>🎴</span>
+                         <div class="shell-card-label">ที่ 3</div>
+                     </div>
+                 </div>
+
+                 <div class="shell-status-display" id="shellStatusDisplay">
+                     <div class="shell-status-text">เลือกการ์ดหนึ่งใบ</div>
+                 </div>
+
+                 <div class="shell-result-message" id="shellResultMessage"></div>
+
+                 <div class="shell-controls">
+                     <button class="shell-btn" id="shellActionBtn" onclick="shellHandleAction()">เลือก</button>
+                     <button class="shell-btn secondary" onclick="backToGameMenu()">← กลับ</button>
+                 </div>
+
+                 <div class="shell-stats">
+                     <div class="shell-stat-item">
+                         เล่นแล้ว: <span class="shell-stat-number" id="shellTotalGames">0</span> ครั้ง
+                     </div>
+                     <div class="shell-stat-item">
+                         ชนะ: <span class="shell-stat-number" id="shellWins">0</span> ครั้ง
+                     </div>
+                     <div class="shell-stat-item">
+                         แพ้: <span class="shell-stat-number" id="shellLosses">0</span> ครั้ง
+                     </div>
+                 </div>
+             </div>`;
+
+            setTimeout(() => initShellGame(), 100);
+        }
+
+        function startSpinnerGame(cardEl) {
+            const categoryDiv = document.querySelector('.category');
+            const categoryContent = document.getElementById('categoryContent');
+
+            categoryContent.innerHTML = `<div class="shell-game-wrapper">
+                 <h2>🎰 Number Spinner</h2>
+                 <p class="game-instructions-text">
+                     เลือกเลข 0-100<br>
+                     กดเริ่มเกม ล้อจะหมุนและแสดงเลข<br>
+                     ถ้าเลขที่ได้อยู่ใน ±5 ของเลขที่เลือก ถือว่าชนะ!
+                 </p>
+
+                 <div style="margin-bottom: 30px;">
+                     <div style="color: #ff6b9d; font-size: 14px; font-weight: 600; margin-bottom: 12px; text-shadow: 0 0 5px rgba(200, 50, 100, 0.5);">📌 ขั้นตอนที่ 1: เลือกเลข</div>
+                     <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                         <input type="number" id="numberInputGame" style="width: 120px; padding: 12px; font-size: 24px; font-weight: 600; text-align: center; background: rgba(200, 50, 100, 0.15); border: 2px solid rgba(200, 50, 100, 0.6); border-radius: 10px; color: #ff6b9d;" placeholder="0-100" min="0" max="100">
+                     </div>
+                     <div id="rangeDisplayGame" style="text-align: center; color: #c05080; font-size: 13px;"></div>
+                 </div>
+
+                 <div style="margin: 30px 0;">
+                     <div style="color: #ff6b9d; font-size: 14px; font-weight: 600; margin-bottom: 12px;">🎡 ขั้นตอนที่ 2: หมุนล้อ</div>
+                     <div style="text-align: center;">
+                         <div style="width: 180px; height: 180px; margin: 0 auto; background: rgba(20, 20, 30, 0.8); border: 8px solid rgba(200, 50, 100, 0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 80px; font-weight: 700; color: #ff6b9d; box-shadow: 0 10px 30px rgba(200, 50, 100, 0.4); position: relative;" id="spinnerNumberGame">?</div>
+                         <div style="color: #c05080; font-size: 12px; margin-top: 10px;">กดปุ่มเริ่มเกม</div>
+                     </div>
+                 </div>
+
+                 <div class="shell-status-display" id="spinnerStatusDisplay">
+                     <div class="shell-status-text">กรุณาเลือกเลข</div>
+                 </div>
+
+                 <div class="shell-result-message" id="spinnerResultMessage"></div>
+
+                 <div class="shell-controls">
+                     <button class="shell-btn" id="spinnerBtn" onclick="numberSpinnerStartGame()">🎊 เริ่มเกม</button>
+                     <button class="shell-btn secondary" onclick="backToGameMenu()">← กลับ</button>
+                 </div>
+
+                 <div class="shell-stats">
+                     <div class="shell-stat-item">
+                         เล่นแล้ว: <span class="shell-stat-number" id="spinnerTotalGames">0</span> ครั้ง
+                     </div>
+                     <div class="shell-stat-item">
+                         ชนะ: <span class="shell-stat-number" id="spinnerWins">0</span> ครั้ง
+                     </div>
+                     <div class="shell-stat-item">
+                         แพ้: <span class="shell-stat-number" id="spinnerLosses">0</span> ครั้ง
+                     </div>
+                 </div>
+             </div>`;
+
+            // เริ่มต้น Spinner Game
+            setTimeout(() => initNumberSpinner(), 100);
+        }
+
+        let numberSpinnerState = {
+            selectedNumber: null,
+            isSpinning: false,
+            totalGames: 0,
+            wins: 0,
+            losses: 0
+        };
+
+        function initNumberSpinner() {
+            const input = document.getElementById('numberInputGame');
+            if (!input) return;
+
+            input.addEventListener('input', function () {
+                if (this.value) {
+                    const num = parseInt(this.value);
+                    if (num >= 0 && num <= 100) {
+                        const min = Math.max(0, num - 5);
+                        const max = Math.min(100, num + 5);
+                        document.getElementById('rangeDisplayGame').innerHTML = `<span style="color: #ff6b9d;">ช่วงชนะ: ${min} - ${max}</span>`;
+                        document.getElementById('spinnerStatusDisplay').innerHTML = `<div class="shell-status-text">เลือกแล้ว: ${num} (ช่วง: ${min}-${max})</div>`;
+                    }
+                }
+            });
+        }
+
+        function numberSpinnerStartGame() {
+            const input = document.getElementById('numberInputGame');
+            const inputValue = input.value;
+
+            if (inputValue === '' || inputValue < 0 || inputValue > 100) {
+                numberSpinnerShowMessage('⚠️ กรุณาเลือกเลข 0-100', 'fail');
+                return;
+            }
+
+            numberSpinnerState.selectedNumber = parseInt(inputValue);
+            numberSpinnerState.isSpinning = true;
+            document.getElementById('spinnerBtn').disabled = true;
+            input.disabled = true;
+
+            document.getElementById('spinnerStatusDisplay').innerHTML = `<div class="shell-status-text">🎡 ล้อกำลังหมุน...</div>`;
+            numberSpinnerHideMessage();
+
+            numberSpinnerWheel();
+        }
+
+        function numberSpinnerWheel() {
+            const spinner = document.getElementById('spinnerNumberGame');
+            let currentNumber = 0;
+            let spins = 0;
+            const maxSpins = 40;
+
+            const spinInterval = setInterval(() => {
+                currentNumber = Math.floor(Math.random() * 101);
+                spinner.textContent = currentNumber;
+                spins++;
+
+                if (spins === maxSpins) {
+                    clearInterval(spinInterval);
+                    numberSpinnerCheckResult(currentNumber);
+                }
+            }, 50);
+        }
+
+        function numberSpinnerCheckResult(resultNumber) {
+            const selectedNum = numberSpinnerState.selectedNumber;
+            const min = Math.max(0, selectedNum - 5);
+            const max = Math.min(100, selectedNum + 5);
+            const isWin = resultNumber >= min && resultNumber <= max;
+
+            numberSpinnerState.totalGames++;
+
+            if (isWin) {
+                numberSpinnerState.wins++;
+                numberSpinnerShowMessage(`🎉 ชนะ! ได้เลข ${resultNumber} (เลือก ${selectedNum})`, 'success');
+                createGameConfetti();
+            } else {
+                numberSpinnerState.losses++;
+                numberSpinnerShowMessage(`❌ แพ้ ได้เลข ${resultNumber} (เลือก ${selectedNum}, ช่วง ${min}-${max})`, 'fail');
+            }
+
+            numberSpinnerUpdateStats();
+            numberSpinnerState.isSpinning = false;
+            document.getElementById('spinnerBtn').disabled = false;
+        }
+
+        function createGameConfetti() {
+            const confettiCount = 100;
+            const colors = ['#ff6b9d', '#c05080', '#ff6b9d', '#ffb6c1', '#ff69b4'];
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                     position: fixed;
+                     width: 10px;
+                     height: 10px;
+                     z-index: 9999;
+                     pointer-events: none;
+                     left: ${Math.random() * window.innerWidth}px;
+                     top: -10px;
+                     background: ${colors[Math.floor(Math.random() * colors.length)]};
+                     border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                 `;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.style.transition = 'all 3s ease-out';
+                    confetti.style.transform = `translateY(${window.innerHeight + 100}px) rotateZ(360deg)`;
+                    confetti.style.opacity = '0';
+                }, Math.random() * 100);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3100);
+            }
+        }
+
+        function numberSpinnerShowMessage(text, type) {
+            const msg = document.getElementById('spinnerResultMessage');
+            msg.textContent = text;
+            msg.className = `shell-result-message show ${type}`;
+        }
+
+        function numberSpinnerHideMessage() {
+            const msg = document.getElementById('spinnerResultMessage');
+            if (msg) msg.classList.remove('show');
+        }
+
+        function numberSpinnerUpdateStats() {
+            const totalEl = document.getElementById('spinnerTotalGames');
+            const winsEl = document.getElementById('spinnerWins');
+            const lossesEl = document.getElementById('spinnerLosses');
+
+            if (totalEl) totalEl.textContent = numberSpinnerState.totalGames;
+            if (winsEl) winsEl.textContent = numberSpinnerState.wins;
+            if (lossesEl) lossesEl.textContent = numberSpinnerState.losses;
+        }
+
+        function backToGameMenu() {
+            shellResetGame();
+            showCategory('game');
+        }
+
+        // ====================== Shell Game System ======================
+        let shellGameState = {
+            phase: 'selection',
+            selectedCard: null,
+            correctCard: null,
+            totalGames: 0,
+            wins: 0,
+            losses: 0
+        };
+
+        function initShellGame() {
+            const container = document.getElementById('shellCardsContainer');
+            if (!container) return;
+
+            const shellCards = container.querySelectorAll('.shell-card');
+            shellCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    if (shellGameState.phase === 'selection') {
+                        shellSelectCard(this);
+                    } else if (shellGameState.phase === 'guessing') {
+                        shellGuessCard(this);
+                    }
+                });
+            });
+        }
+
+        function shellSelectCard(cardEl) {
+            if (shellGameState.selectedCard) {
+                shellGameState.selectedCard.classList.remove('selected');
+            }
+
+            shellGameState.selectedCard = cardEl;
+            shellGameState.correctCard = cardEl.dataset.id;
+            cardEl.classList.add('selected');
+
+            const statusDisplay = document.getElementById('shellStatusDisplay');
+            statusDisplay.innerHTML = `
+                 <div class="shell-status-text">คุณเลือกการ์ดที่ ${shellGameState.correctCard} ✓</div>
+                 <div class="shell-status-subtext">จดจำให้ดีว่าการ์ดนี้อยู่ที่ตำแหน่งไหน</div>
+             `;
+
+            document.getElementById('shellActionBtn').textContent = 'เริ่มสลับการ์ด';
+            shellHideMessage();
+        }
+
+        function shellHandleAction() {
+            if (shellGameState.phase === 'selection' && shellGameState.correctCard) {
+                shellStartShuffling();
+            }
+        }
+
+        function shellStartShuffling() {
+            shellGameState.phase = 'shuffling';
+            document.getElementById('shellActionBtn').disabled = true;
+
+            const phaseTitle = document.getElementById('phaseTitle');
+            const statusDisplay = document.getElementById('shellStatusDisplay');
+
+            phaseTitle.textContent = '🔀 ขั้นตอนที่ 2: การ์ดกำลังสลับที่...';
+            statusDisplay.innerHTML = `<div class="shell-status-text">กำลังสลับการ์ด...</div>`;
+
+            const cards = document.querySelectorAll('.shell-card');
+            cards.forEach(card => card.classList.add('locked'));
+
+            shellShuffleCards();
+
+            setTimeout(() => {
+                shellGameState.phase = 'guessing';
+                phaseTitle.textContent = '🤔 ขั้นตอนที่ 3: เดาว่าไบไหน';
+                statusDisplay.innerHTML = `<div class="shell-status-text">คลิกที่การ์ดที่คุณคิดว่าถูก</div>`;
+
+                cards.forEach(card => {
+                    card.classList.remove('locked', 'selected');
+                });
+
+                document.getElementById('shellActionBtn').textContent = 'เล่นใหม่';
+            }, 3000);
+        }
+
+        function shellShuffleCards() {
+            const shuffles = [
+                { from: 0, to: 1 },
+                { from: 2, to: 0 },
+                { from: 1, to: 2 },
+                { from: 0, to: 2 },
+                { from: 2, to: 1 }
+            ];
+
+            let delay = 0;
+            shuffles.forEach((shuffle, index) => {
+                setTimeout(() => {
+                    shellSwapCards(shuffle.from, shuffle.to);
+                }, delay);
+                delay += 400;
+            });
+        }
+
+        function shellSwapCards(fromIndex, toIndex) {
+            const cards = document.querySelectorAll('.shell-card');
+            const fromCard = cards[fromIndex];
+            const toCard = cards[toIndex];
+
+            fromCard.classList.add('animation-swap-shell');
+            toCard.classList.add('animation-swap-shell');
+
+            const temp = fromCard.dataset.id;
+            fromCard.dataset.id = toCard.dataset.id;
+            toCard.dataset.id = temp;
+
+            setTimeout(() => {
+                fromCard.classList.remove('animation-swap-shell');
+                toCard.classList.remove('animation-swap-shell');
+            }, 600);
+        }
+
+        function shellGuessCard(cardEl) {
+            if (shellGameState.phase !== 'guessing') return;
+
+            shellGameState.phase = 'result';
+            const cards = document.querySelectorAll('.shell-card');
+            cards.forEach(card => card.classList.add('locked'));
+
+            const isCorrect = cardEl.dataset.id === shellGameState.correctCard;
+            shellGameState.totalGames++;
+
+            if (isCorrect) {
+                shellGameState.wins++;
+                cardEl.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                cardEl.style.boxShadow = '0 0 30px rgba(40, 167, 69, 0.6)';
+                shellShowMessage('🎉 ถูกต้องเลย! ยินดีด้วย!', 'success');
+                document.getElementById('phaseTitle').textContent = '✅ คุณชนะ!';
+            } else {
+                shellGameState.losses++;
+                cardEl.style.background = 'linear-gradient(135deg, #dc3545 0%, #e74c3c 100%)';
+                cardEl.style.boxShadow = '0 0 30px rgba(220, 53, 69, 0.6)';
+
+                const correctCardEl = Array.from(cards).find(c => c.dataset.id === shellGameState.correctCard);
+                setTimeout(() => {
+                    correctCardEl.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    correctCardEl.style.boxShadow = '0 0 30px rgba(40, 167, 69, 0.6)';
+                    shellShowMessage('❌ ผิดแล้ว! ถูกต้องคือที่นี่ ➜', 'fail');
+                }, 500);
+
+                document.getElementById('phaseTitle').textContent = '❌ คุณแพ้';
+            }
+
+            shellUpdateStats();
+            document.getElementById('shellActionBtn').disabled = false;
+            document.getElementById('shellActionBtn').textContent = '🔄 เล่นใหม่';
+        }
+
+        function shellResetGame() {
+            shellGameState.phase = 'selection';
+            shellGameState.selectedCard = null;
+            shellGameState.correctCard = null;
+
+            const cards = document.querySelectorAll('.shell-card');
+            cards.forEach((card, index) => {
+                card.classList.remove('selected', 'locked', 'disabled', 'animation-swap-shell');
+                card.dataset.id = (index + 1).toString();
+                card.style.background = '';
+                card.style.boxShadow = '';
+                card.querySelector('.shell-card-label').textContent = `ที่ ${index + 1}`;
+            });
+
+            document.getElementById('phaseTitle').textContent = '📌 ขั้นตอนที่ 1: เลือกการ์ด';
+            document.getElementById('shellStatusDisplay').innerHTML = '<div class="shell-status-text">เลือกการ์ดหนึ่งใบ</div>';
+            shellHideMessage();
+            document.getElementById('shellActionBtn').textContent = 'เลือก';
+            document.getElementById('shellActionBtn').disabled = false;
+        }
+
+        function shellShowMessage(text, type) {
+            const msg = document.getElementById('shellResultMessage');
+            msg.textContent = text;
+            msg.className = `shell-result-message show ${type}`;
+        }
+
+        function shellHideMessage() {
+            document.getElementById('shellResultMessage').classList.remove('show');
+        }
+
+        function shellUpdateStats() {
+             document.getElementById('shellTotalGames').textContent = shellGameState.totalGames;
+             document.getElementById('shellWins').textContent = shellGameState.wins;
+             document.getElementById('shellLosses').textContent = shellGameState.losses;
+         }
+        </script>
+        </body>
+
+        </html>
